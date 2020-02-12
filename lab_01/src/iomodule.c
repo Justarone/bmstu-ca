@@ -17,13 +17,6 @@ int read_data(data_t *const data, const char *const filename)
     }
 
     // Table init.
-    data->divided_sums = malloc((data->n - 1) * data->n / 2 * sizeof(double)); // be careful, mb +1
-    if (!data->divided_sums)
-    {
-        fprintf(OUTPUT, "Something went wrong with memory allocation...");
-        fclose(f);
-        return ALLOC_ERROR;
-    }
 
     data->table = (double **)malloc(COORDINATES * sizeof(double *));
     if (!data->table)
@@ -91,13 +84,20 @@ int read_data(data_t *const data, const char *const filename)
 
     fprintf(OUTPUT, "Enter polynomial degree: ");
     fscanf(INPUT,"%u", &data->n);
+    data->n++; // cause data n - number of points (more than polynomial degree).
     fprintf(OUTPUT, "\n\n");
 
-#ifdef DEBUG
-    fprintf(OUTPUT, "Points were read from the file: \n");
-    for (int i = 0; i < data->size; i++)
-        fprintf(OUTPUT, "%.3lf %.3lf\n", data->table[0][i], data->table[1][i]);
-#endif
+    // Init divided_sums array.
+    data->divided_sums = (double *)malloc((data->n - 1) * data->n / 2 * sizeof(double)); // be careful, mb +1
+    if (!data->divided_sums)
+    {
+        fprintf(OUTPUT, "Something went wrong with memory allocation...");
+        for (int i = 0; i < COORDINATES; i++)
+            free(data->table[i]);
+        free(data->table);
+
+        return ALLOC_ERROR;
+    }
 
     data->is_cached = NO_CACHE;
     data->cached_for = NO_CACHE;

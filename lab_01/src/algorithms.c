@@ -57,13 +57,13 @@ double interpolation(data_t *const data, const double argument,
 #endif
 
         for (int i = 0; i < data->n - 1; i++)
-            data->divided_sums[i] = (data->table[1 ^ mode][i] - data->table[1 ^ mode][i + 1]) / 
+            data->divided_sums[i] = (data->table[1 ^ mode][i] - data->table[1 ^ mode][i + 1]) /
                 (data->table[0 ^ mode][i] - data->table[0 ^ mode][i + 1]);
 
         double *cur_elem = data->divided_sums + data->n - 1;
         double *sum_ptr = data->divided_sums;
 
-        for (int i = 1; i < data->n; i++)
+        for (int i = 1; i < data->n - 1; i++)
         {
             for (int j = 0; j < data->n - i - 1; j++)
             {
@@ -77,7 +77,7 @@ double interpolation(data_t *const data, const double argument,
 
 #ifdef DEBUG
     fprintf(OUTPUT, "Divided sums:\n");
-    for (int i = 0; i < (1 + data->n) * data->n / 2; i++)
+    for (int i = 0; i < (data->n - 1) * data->n / 2; i++)
         fprintf(OUTPUT, "%lf, ", data->divided_sums[i]);
     fprintf(OUTPUT, "\n\n");
 #endif
@@ -86,7 +86,7 @@ double interpolation(data_t *const data, const double argument,
     data->is_cached = mode;
     data->cached_for = section_start;
 
-    // Couning formula.
+    // Count formula.
     double multi = 1;
     double summary = data->table[1 ^ mode][section_start];
     int index = 0;
@@ -133,4 +133,3 @@ double half_division(data_t *const data)
     }
     return center[0];      
 }
-
