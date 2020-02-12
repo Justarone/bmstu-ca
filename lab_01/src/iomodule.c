@@ -110,7 +110,7 @@ void result_processing(data_t *const data)
             interpolation(data, data->x, NORMAL, FALSE));
     fprintf(OUTPUT, "Reversed interpolation (root):\ny = f(%.3lf) = %lf\n\n",
             interpolation(data, REV_INT_VALUE, REVERSED, FALSE), (double) REV_INT_VALUE);
-    if (data->size > 1 && data->table[0][1] * data->table[1][data->size - 1] < 0)
+    if (data->size > 1 && data->table[1][0] * data->table[1][data->size - 1] < 0)
         fprintf(OUTPUT, "Half division method:\nRoot: %.5lf;\nAccuracy: %.5lf\n\n",
                 half_division(data), data->acc);
     else
