@@ -40,7 +40,7 @@ do
         echo -e "\033[0;29m"
     fi
 
-    ./app.exe "$DATAS""$SUFFIX".txt <"$INS""$SUFFIX".txt >out.txt
+    ./app.exe "$DATAS""$SUFFIX".txt autotest <"$INS""$SUFFIX".txt >out.txt
     
     echo -e "\033[1;36mYour answer:"
     cat out.txt

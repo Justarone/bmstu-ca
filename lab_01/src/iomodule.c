@@ -7,7 +7,7 @@
 #include "../include/algorithms.h"
 
 
-int read_data(data_t *const data, const char *const filename)
+int read_data(data_t *const data, const char *const filename, const int user_flag)
 {
     FILE *f = fopen(filename, "r");
     if (!f)
@@ -76,14 +76,24 @@ int read_data(data_t *const data, const char *const filename)
     fclose(f);
     fprintf(OUTPUT, "Data from file successfully readed!\n");
 
-    fprintf(OUTPUT, "Enter x: ");
+    if (user_flag)
+        fprintf(OUTPUT, "Enter x: ");
     fscanf(INPUT, "%lf", &data->x);
+    if (!user_flag)
+        fprintf(OUTPUT, "x = %g;\n", data->x);
 
-    fprintf(OUTPUT, "Enter accuracy (for half division method): ");
-    fscanf(INPUT,"%lf", &data->acc);
+    if (user_flag)
+        fprintf(OUTPUT, "Enter accuracy (for half division method): ");
+    fscanf(INPUT, "%lf", &data->acc);
+    if (!user_flag)
+        fprintf(OUTPUT, "Accuracy = %g;\n", data->acc);
 
-    fprintf(OUTPUT, "Enter polynomial degree: ");
+    if (user_flag)
+        fprintf(OUTPUT, "Enter polynomial degree: ");
     fscanf(INPUT,"%u", &data->n);
+    if (!user_flag)
+        fprintf(OUTPUT, "Polynomial degree = %d;\n", data->n);
+
     data->n++; // cause data n - number of points (more than polynomial degree).
     fprintf(OUTPUT, "\n\n");
 

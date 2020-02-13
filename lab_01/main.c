@@ -14,9 +14,9 @@ int main(int argc, char **argv)
     int rc;
 
     if (argc > 1)
-        rc = read_data(&data, argv[1]);
+        rc = read_data(&data, argv[1], argc < 3);
     else
-        rc = read_data(&data, FILENAME);
+        rc = read_data(&data, FILENAME, argc < 3);
 
     if (rc)
         return rc;
