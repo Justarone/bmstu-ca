@@ -44,7 +44,7 @@ static int find_section(data_t *const data, const double argument, const int mod
     }
     
     // if behind found place there is no enough points, we'll take some from the beginning
-    int end_diff = data->n / 2 - ~(1 & data->n) - (data->size - index - 1);
+    int end_diff = data->n / 2 - (1 - (1 & data->n)) - (data->size - index - 1);
     //             half sector   not `even` sector     place left behind
 
     if (end_diff < 0)
@@ -77,7 +77,7 @@ double interpolation(data_t *const data, const double argument,
 #endif
 
         for (int i = section_start; i < section_start + data->n - 1; i++)
-            data->divided_sums[i] = (data->table[1 ^ mode][i] - data->table[1 ^ mode][i + 1]) /
+            data->divided_sums[i - section_start] = (data->table[1 ^ mode][i] - data->table[1 ^ mode][i + 1]) /
                 (data->table[0 ^ mode][i] - data->table[0 ^ mode][i + 1]);
 
         double *cur_elem = data->divided_sums + data->n - 1;
@@ -113,7 +113,7 @@ double interpolation(data_t *const data, const double argument,
 
     for (int i = 0; i < data->n - 1; i++)
     {
-        multi *= (argument - data->table[0 ^ mode][i]);
+        multi *= (argument - data->table[0 ^ mode][section_start + i]);
         summary += multi * data->divided_sums[index];
         index += data->n - i - 1;
     }
