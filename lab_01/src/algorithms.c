@@ -1,10 +1,31 @@
 #include <stdio.h>
 
 #include "../include/algorithms.h"
-#include "../include/constants.h"
 
 #define ABS(X) X > 0 ? X : -X
 
+enum ERRORS_T data_check(const data_t *const data)
+{
+    if (data->n > data->size)
+        return POL_DEG_ERROR;
+
+    if (data->x < data->table[0][0] || data->x > data->table[0][data->size - 1])
+        return EXTRAPOLATION_ERROR;
+
+    if(data->table[1][0] * data->table[1][data->size - 1] > 0)
+        return NO_ROOT_ERROR;
+
+    double sign_x = (data->table[0][0] < data->table[0][1]) - 0.5;
+    double sign_y = (data->table[1][0] < data->table[1][1]) - 0.5;
+    for (int i = 1; i < data->size - 1; i++)
+    {
+        if ((data->table[0][i + 1] - data->table[0][i]) * sign_x < 0 ||
+                (data->table[1][i + 1] - data->table[1][i]) * sign_y < 0)
+            return NO_ORDER_ERROR;
+    }
+
+    return OK;
+}
 static int find_section(data_t *const data, const double argument, const int mode)
 {
     double sign = (data->table[mode ^ 0][0] < data->table[mode ^ 0][1]) - 0.5;

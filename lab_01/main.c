@@ -21,6 +21,30 @@ int main(int argc, char **argv)
     if (rc)
         return rc;
 
+    enum ERRORS_T error = data_check(&data);
+    switch(error)
+    {
+        case POL_DEG_ERROR:
+            fprintf(OUTPUT,
+                    "Incorrect polinomial degree: there is no enough points to solve this.\n");
+            return POL_DEG_ERROR;
+
+        case EXTRAPOLATION_ERROR:
+            fprintf(OUTPUT, "Extrapolation error.\n"); 
+            return EXTRAPOLATION_ERROR;
+
+        case NO_ROOT_ERROR:
+            fprintf(OUTPUT, "Function doesn't cross 0 or function is not monotonous.\n");
+            return NO_ROOT_ERROR;
+
+        case NO_ORDER_ERROR:
+            fprintf(OUTPUT, "Points in table are not ordered or function is not monotonous\n");
+            return NO_ORDER_ERROR;
+
+        default:
+            break;
+    }
+
     result_processing(&data);
 
     free(data.divided_sums);

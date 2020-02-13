@@ -2,7 +2,9 @@
 #define _ALGORITHMS_H_
 
 #include "struct.h"
+#include "constants.h"
 
+enum ERRORS_T data_check(const data_t *const data);
 double half_division(data_t *const data);
 // `mode` should be `REVERSED` or `NORMAL`
 double interpolation(data_t *const data, const double argument,

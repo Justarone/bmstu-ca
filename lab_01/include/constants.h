@@ -4,10 +4,8 @@
 // Flags
 // #define DEBUG
 
-#define OK 0
-#define FILE_ERROR 1
-#define ALLOC_ERROR 2
-#define READ_ERROR 3
+enum ERRORS_T { OK, FILE_ERROR, ALLOC_ERROR, READ_ERROR, POL_DEG_ERROR, EXTRAPOLATION_ERROR, 
+NO_ROOT_ERROR, NO_ORDER_ERROR };
 
 #define FALSE 0
 #define TRUE 1
@@ -23,6 +21,6 @@
 #define REV_INT_VALUE 0
 #define OUTPUT stdout
 #define INPUT stdin
-#define FILENAME "data/data.txt"
+#define FILENAME "test/data/data_01.txt"
 
 #endif

@@ -40,10 +40,10 @@ do
         echo -e "\033[0;29m"
     fi
 
-    ./app.exe "$DATAS""$SUFFIX".txt autotest <"$INS""$SUFFIX".txt >out.txt
+    ./app.exe "$DATAS""$SUFFIX".txt autotest <"$INS""$SUFFIX".txt >test/out.txt
     
     echo -e "\033[1;36mYour answer:"
-    cat out.txt
+    cat test/out.txt
 
     if [ -f "$OUTS""$SUFFIX".txt ]; then
         echo -e "\033[1;32mRight answer:"
@@ -52,5 +52,6 @@ do
         echo -e "\033[0;29m"
     fi
     
-
 done
+
+rm test/out.txt

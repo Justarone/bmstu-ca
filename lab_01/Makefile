@@ -23,4 +23,4 @@ bin/%.o: src/%.c
 	$(CC) -o $@ -I $(INCLUDE_DIR) $(COMPILE_FLAGS) $^ -c
 
 clean:
-	rm -rf bin/
+	rm -rf bin/ app.exe
