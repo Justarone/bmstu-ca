@@ -2,7 +2,7 @@
 #define _CONSTANTS_H_
 
 // Flags
-#define DEBUG
+// #define DEBUG
 
 #define OK 0
 #define FILE_ERROR 1

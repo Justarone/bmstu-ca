@@ -14,12 +14,10 @@ int main(int argc, char **argv)
     int rc;
 
     if (argc > 1)
-    {
-        printf("%s", argv[1]);
         rc = read_data(&data, argv[1]);
-    }
     else
         rc = read_data(&data, FILENAME);
+
     if (rc)
         return rc;
 
