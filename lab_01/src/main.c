@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "include/algorithms.h"
-#include "include/iomodule.h"
-#include "include/struct.h"
-#include "include/constants.h"
+#include "../include/algorithms.h"
+#include "../include/iomodule.h"
+#include "../include/struct.h"
+#include "../include/constants.h"
 
 
 int main(int argc, char **argv)

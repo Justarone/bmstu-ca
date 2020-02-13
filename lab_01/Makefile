@@ -14,10 +14,6 @@ test: app.exe
 app.exe: $(BINARIES)
 	$(CC) -o $@ -I $(INCLUDE_DIR) $(COMPILE_FLAGS) $^
 
-bin/%.o: %.c
-	mkdir -p bin
-	$(CC) -o $@ -I $(INCLUDE_DIR) $(COMPILE_FLAGS) $^ -c
-
 bin/%.o: src/%.c
 	mkdir -p bin
 	$(CC) -o $@ -I $(INCLUDE_DIR) $(COMPILE_FLAGS) $^ -c
