@@ -54,6 +54,44 @@ static int find_section(data_t *const data, const double argument, const int mod
     return index > 0 ? index : 0; 
 }
 
+static void count_div_sums(data_t *const data, const int section_start, const int mode)
+{
+    for (int i = section_start; i < section_start + data->n - 1; i++)
+        data->divided_sums[i - section_start] = (data->table[1 ^ mode][i] - data->table[1 ^ mode][i + 1]) /
+            (data->table[0 ^ mode][i] - data->table[0 ^ mode][i + 1]);
+
+    double *cur_elem = data->divided_sums + data->n - 1;
+    double *sum_ptr = data->divided_sums;
+
+    for (int i = 1; i < data->n - 1; i++)
+    {
+        for (int j = 0; j < data->n - i - 1; j++)
+        {
+            *cur_elem = (*sum_ptr - *(sum_ptr + 1)) / 
+                (data->table[0 ^ mode][j] - data->table[0 ^ mode][j + 1 + i]);
+            cur_elem++, sum_ptr++;
+        }
+        sum_ptr++;
+    } 
+}
+
+
+static double polynomial_value(data_t *const data, const double argument, 
+                               const int section_start, const int mode)
+{
+    double multi = 1;
+    double summary = data->table[1 ^ mode][section_start];
+    int index = 0;
+
+    for (int i = 0; i < data->n - 1; i++)
+    {
+        multi *= (argument - data->table[0 ^ mode][section_start + i]);
+        summary += multi * data->divided_sums[index];
+        index += data->n - i - 1;
+    }
+    return summary;
+}
+
 
 double interpolation(data_t *const data, const double argument,
                      const int mode, const int cache_usage)
@@ -76,23 +114,7 @@ double interpolation(data_t *const data, const double argument,
                 data->cached_for, section_start);
 #endif
 
-        for (int i = section_start; i < section_start + data->n - 1; i++)
-            data->divided_sums[i - section_start] = (data->table[1 ^ mode][i] - data->table[1 ^ mode][i + 1]) /
-                (data->table[0 ^ mode][i] - data->table[0 ^ mode][i + 1]);
-
-        double *cur_elem = data->divided_sums + data->n - 1;
-        double *sum_ptr = data->divided_sums;
-
-        for (int i = 1; i < data->n - 1; i++)
-        {
-            for (int j = 0; j < data->n - i - 1; j++)
-            {
-                *cur_elem = (*sum_ptr - *(sum_ptr + 1)) / 
-                    (data->table[0 ^ mode][j] - data->table[0 ^ mode][j + 1 + i]);
-                cur_elem++, sum_ptr++;
-            }
-            sum_ptr++;
-        } 
+        count_div_sums(data, section_start, mode);
     }        
 
 #ifdef DEBUG
@@ -107,18 +129,7 @@ double interpolation(data_t *const data, const double argument,
     data->cached_for = section_start;
 
     // Count formula.
-    double multi = 1;
-    double summary = data->table[1 ^ mode][section_start];
-    int index = 0;
-
-    for (int i = 0; i < data->n - 1; i++)
-    {
-        multi *= (argument - data->table[0 ^ mode][section_start + i]);
-        summary += multi * data->divided_sums[index];
-        index += data->n - i - 1;
-    }
-
-    return summary;
+    return polynomial_value(data, argument, section_start, mode);
 }
 
 
