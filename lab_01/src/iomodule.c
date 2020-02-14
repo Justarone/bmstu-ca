@@ -98,7 +98,7 @@ int read_data(data_t *const data, const char *const filename, const int user_fla
     fprintf(OUTPUT, "\n\n");
 
     // Init divided_sums array.
-    data->divided_sums = (double *)malloc((data->n - 1) * data->n / 2 * sizeof(double)); // be careful, mb +1
+    data->divided_sums = (double *)malloc((data->n - 1) * data->n / 2 * sizeof(double)); 
     if (!data->divided_sums)
     {
         fprintf(OUTPUT, "Something went wrong with memory allocation...");
@@ -114,15 +114,42 @@ int read_data(data_t *const data, const char *const filename, const int user_fla
     return OK;
 }
 
+
+void print_polynomial(const data_t *const data, const int mode)
+{
+    int section_start = find_section(data, data->x, mode);
+    fprintf(OUTPUT, "Pn(x) = %.3lf", data->table[1 ^ mode][section_start]);
+    int index = 0;
+
+    for (int i = 0; i < data->n - 1; i++)
+    {
+        fprintf(OUTPUT, " + ");
+        fprintf(OUTPUT, "(x - %.3lf)", data->table[0 ^ mode][section_start]);
+        for (int j = 1; j <= i; j++)
+            fprintf(OUTPUT, " * (x - %.3lf)", data->table[0 ^ mode][section_start]);
+        fprintf(OUTPUT, " * %.3lf", data->divided_sums[index]);
+        index += data->n - i - 1;
+    }
+    fprintf(OUTPUT, "\n\n");
+}
+
+
 void result_processing(data_t *const data)
 {
     fprintf(OUTPUT, "Interpolation result:\ny = f(%.3lf) = %lf\n\n", data->x,
             interpolation(data, data->x, NORMAL, FALSE));
+
+#ifdef POL_PRINT
+    print_polynomial(data, NORMAL);
+#endif
+
     fprintf(OUTPUT, "Reversed interpolation (root):\ny = f(%.3lf) = %lf\n\n",
             interpolation(data, REV_INT_VALUE, REVERSED, FALSE), (double) REV_INT_VALUE);
+
     if (data->size > 1 && data->table[1][0] * data->table[1][data->size - 1] < 0)
         fprintf(OUTPUT, "Half division method:\nRoot: %.5lf;\nAccuracy: %.5lf\n\n",
                 half_division(data), data->acc);
     else
-        fprintf(OUTPUT, "Can't find solution: need different signs on the boundaries of function.");
+        fprintf(OUTPUT,
+                "Can't find solution: need different signs on the boundaries of function.");
 }

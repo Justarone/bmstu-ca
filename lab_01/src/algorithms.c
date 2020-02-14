@@ -26,7 +26,9 @@ enum ERRORS_T data_check(const data_t *const data)
 
     return OK;
 }
-static int find_section(data_t *const data, const double argument, const int mode)
+
+
+int find_section(const data_t *const data, const double argument, const int mode)
 {
     double sign = (data->table[mode ^ 0][0] < data->table[mode ^ 0][1]) - 0.5;
     int index = 0;
@@ -54,7 +56,8 @@ static int find_section(data_t *const data, const double argument, const int mod
     return index > 0 ? index : 0; 
 }
 
-static void count_div_sums(data_t *const data, const int section_start, const int mode)
+
+void count_div_sums(data_t *const data, const int section_start, const int mode)
 {
     for (int i = section_start; i < section_start + data->n - 1; i++)
         data->divided_sums[i - section_start] = (data->table[1 ^ mode][i] - data->table[1 ^ mode][i + 1]) /
