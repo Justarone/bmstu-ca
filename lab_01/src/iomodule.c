@@ -126,7 +126,7 @@ void print_polynomial(const data_t *const data, const int mode)
         fprintf(OUTPUT, " + ");
         fprintf(OUTPUT, "(x - %.3lf)", data->table[0 ^ mode][section_start]);
         for (int j = 1; j <= i; j++)
-            fprintf(OUTPUT, " * (x - %.3lf)", data->table[0 ^ mode][section_start]);
+            fprintf(OUTPUT, " * (x - %.3lf)", data->table[0 ^ mode][section_start + j]);
         fprintf(OUTPUT, " * %.3lf", data->divided_sums[index]);
         index += data->n - i - 1;
     }
