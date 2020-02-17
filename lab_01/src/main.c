@@ -47,9 +47,9 @@ int main(int argc, char **argv)
 
     result_processing(&data);
 
-    free(data.divided_sums);
-    for (int i = 0; i < COORDINATES; i++)
-        free(data.table[i]);
-    free(data.table);
-    return 0;
+    /*free(data.divided_sums);*/
+    /*for (int i = 0; i < COORDINATES; i++)*/
+        /*free(data.table[i]);*/
+    /*free(data.table);*/
+    /*return 0;*/
 }

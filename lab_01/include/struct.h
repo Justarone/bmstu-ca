@@ -4,6 +4,7 @@
 typedef struct data_t
 {
     double acc;
+    double abs_acc;
     double x;
     unsigned n;
     double **table;

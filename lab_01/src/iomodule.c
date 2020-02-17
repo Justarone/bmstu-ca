@@ -76,6 +76,7 @@ int read_data(data_t *const data, const char *const filename, const int user_fla
     fclose(f);
     fprintf(OUTPUT, "Data from file successfully readed!\n");
 
+
     if (user_flag)
         fprintf(OUTPUT, "Enter x: ");
     fscanf(INPUT, "%lf", &data->x);
@@ -87,6 +88,12 @@ int read_data(data_t *const data, const char *const filename, const int user_fla
     fscanf(INPUT, "%lf", &data->acc);
     if (!user_flag)
         fprintf(OUTPUT, "Accuracy = %g;\n", data->acc);
+
+    if (user_flag)
+        fprintf(OUTPUT, "Enter absolute accuracy (for half division method):");
+    fscanf(INPUT,"%lf", &data->abs_acc);
+    if (!user_flag)
+        fprintf(OUTPUT, "Absolute accuracy = %g;\n", data->abs_acc);
 
     if (user_flag)
         fprintf(OUTPUT, "Enter polynomial degree: ");

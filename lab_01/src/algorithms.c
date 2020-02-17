@@ -146,7 +146,7 @@ double half_division(data_t *const data)
     double center[2];
 
     center[0] = (left[0] + right[0]) / 2;
-    while (ABS((left[0] - right[0])) / 2 > data->acc)
+    while (ABS((left[0] - right[0])) > data->acc * center[0] + data->abs_acc)
     {
         center[1] = interpolation(data, center[0], NORMAL, TRUE);
         if (left[1] * center[1] > 0)
