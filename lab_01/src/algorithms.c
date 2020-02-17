@@ -9,7 +9,9 @@ enum ERRORS_T data_check(const data_t *const data)
     if (data->n > data->size)
         return POL_DEG_ERROR;
 
-    if (data->x < data->table[0][0] || data->x > data->table[0][data->size - 1])
+    double sign = (data->table[0][1] > data->table[0][0]) - 0.5;
+    if ((data->x - data->table[0][0]) * sign < 0 ||
+            (data->x - data->table[0][data->size - 1]) * sign > 0)
         return EXTRAPOLATION_ERROR;
 
     if(data->table[1][0] * data->table[1][data->size - 1] > 0)
