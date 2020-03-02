@@ -1,0 +1,6 @@
+-I
+./include
+-Wall
+-Werror
+-std=c99
+-pedantic
