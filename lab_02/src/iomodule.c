@@ -27,6 +27,16 @@ int read_data(data_t *const data, const char *const filename)
                 return FILE_ERROR;
         }
 
+    // if table successfully read:
+    for (int i = 0; i < data->size[X]; i++)
+    {
+        for (int j = 0; j < data->size[Y]; j++)
+            fprintf(OUTPUT, "(%.2lf; %.2lf; %.2lf);  ", data->table[i][j][X], data->table[i][j][Y],
+                    data->table[i][j][Z]);
+        fprintf(OUTPUT, "\n");
+    }
+
+
 
     fclose(f);
     fprintf(OUTPUT, "Data from file successfully readed!\n");
@@ -42,7 +52,7 @@ int read_data(data_t *const data, const char *const filename)
     fprintf(OUTPUT, "Enter x polynomial degree: ");
     fscanf(INPUT,"%u", &data->n[X]);
 
-    fprintf(OUTPUT, "Enter x polynomial degree: ");
+    fprintf(OUTPUT, "Enter y polynomial degree: ");
     fscanf(INPUT,"%u", &data->n[Y]);
     data->n[X]++; 
     data->n[Y]++; 
