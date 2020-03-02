@@ -44,7 +44,7 @@ enum ERRORS_T data_check(const data_t *const data)
 }
 
 
-static int find_section(double **const points, const int size, const int deg, const int arg,
+static int find_section(double **const points, const int size, const int deg, const double arg,
         const int mode)
 {
     double sign = (points[0][mode] < points[1][mode]) - 0.5;
@@ -73,8 +73,8 @@ static int find_section(double **const points, const int size, const int deg, co
 }
 
 
-static double *count_div_sums(double **const points, const int deg, const int section_start,
-        const int mode)
+static double *count_div_sums(double **const points, const int deg,
+        const int section_start, const int mode)
 {
     double *div_sums = malloc(deg * (deg - 1) / 2 * sizeof(double));
     for (int i = section_start; i < section_start + deg - 1; i++)
@@ -94,12 +94,16 @@ static double *count_div_sums(double **const points, const int deg, const int se
         }
         sum_ptr++;
     } 
+    /*printf("\n\ndiv_sums!:\n\n");*/
+    /*for (int i = 0; i < deg * (deg - 1) / 2; i++)*/
+        /*printf("%.2lf,   ", div_sums[i]);*/
+    /*printf("\n\n");*/
     return div_sums;
 }
 
 
-static double polynomial_value(double **const points, const int section_start, const int deg,
-        const int arg, const int mode, double *div_sums)
+static double polynomial_value(double **const points, const int section_start,
+        const int deg, const double arg, const int mode, double *div_sums)
 {
     double multi = 1;
     double summary = points[section_start][Z];
@@ -115,7 +119,7 @@ static double polynomial_value(double **const points, const int section_start, c
 }
 
 
-double interpolation(double **const points, const int size, const int deg, const int arg,
+double interpolation(double **const points, const int size, const int deg, const double arg,
         const int mode)
 {
     int section_start = find_section(points, size, deg, arg, mode);
@@ -148,9 +152,15 @@ double multi_interpolation(data_t *const data)
             points[j][Y] = data->table[i][j][Y];
             points[j][Z] = data->table[i][j][Z];
         }
+        /*printf("Row is:\n");*/
+        /*for (int k = 0; k < data->size[Y]; k++)*/
+            /*printf("%.2lf, %.2lf, %.2lf;    ", points[k][X], points[k][Y], points[k][Z]);*/
+        /*printf("\nsection_start: %d\n", find_section(points, data->size[Y],*/
+                /*data->n[Y], data->x[Y], Y));*/
 
         y_res[i - section_start][Z] = interpolation(points, data->size[Y],
                 data->n[Y], data->x[Y], Y);
+        /*printf("\n\nresult is: %.2lf\n\n", y_res[i - section_start][Z]);*/
         y_res[i - section_start][X] = data->table[i][0][X];
         y_res[i - section_start][Y] = data->x[Y];
     }
