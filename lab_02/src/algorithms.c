@@ -102,7 +102,7 @@ static double polynomial_value(double **const points, const int section_start, c
         const int arg, const int mode, double *div_sums)
 {
     double multi = 1;
-    double summary = points[section_start][mode];
+    double summary = points[section_start][Z];
     int index = 0;
 
     for (int i = 0; i < deg - 1; i++)
@@ -121,7 +121,6 @@ double interpolation(double **const points, const int size, const int deg, const
     int section_start = find_section(points, size, deg, arg, mode);
     double *div_sums = count_div_sums(points, deg, section_start, mode);
     double result = polynomial_value(points, section_start, deg, arg, mode, div_sums);
-    /*free(div_sums);*/
     return result;
 }
 
@@ -129,18 +128,10 @@ double interpolation(double **const points, const int size, const int deg, const
 double multi_interpolation(data_t *const data)
 {
     double *buffer[data->size[X]];
-    fprintf(OUTPUT, "Looking for section for (arg is %.2lf):\n", data->x[X]);
     for (int i = 0; i < data->size[X]; i++)
-    {
         buffer[i] = data->table[i][0];
-        fprintf(OUTPUT, "(%.2lf; %.2lf; %.2lf);  ", data->table[i][0][X], data->table[i][0][Y],
-                data->table[i][0][Z]);
-    }
-    fprintf(OUTPUT, "\n");
     int section_start = find_section(buffer, data->size[X], data->n[X], data->x[X], X);
     
-    fprintf(OUTPUT,"result: %d\n\n", section_start);
-
     double **y_res = malloc(data->n[X] * sizeof(double *));
     for (int i = 0; i < data->size[X]; i++)
         y_res[i] = malloc(ONE_POINT * sizeof(double));
@@ -151,38 +142,20 @@ double multi_interpolation(data_t *const data)
 
     for (int i = section_start; i < section_start + data->n[X]; i++)
     {
-        fprintf(OUTPUT, "searching interpolation..:\n");
         for (int j = 0; j < data->size[Y]; j++)
         {
             points[j][X] = data->table[i][0][X];
             points[j][Y] = data->table[i][j][Y];
             points[j][Z] = data->table[i][j][Z];
-            fprintf(OUTPUT, "(%.2lf; %.2lf; %.2lf);  ", points[j][X], points[j][Y],
-                    points[j][Z]);
         }
 
         y_res[i - section_start][Z] = interpolation(points, data->size[Y],
                 data->n[Y], data->x[Y], Y);
-        fprintf(OUTPUT, "result: %.2lf\n\n", y_res[i - section_start][Z]);
         y_res[i - section_start][X] = data->table[i][0][X];
         y_res[i - section_start][Y] = data->x[Y];
     }
 
-    fprintf(OUTPUT, "result interpolation:\n");
-    for (int i = 0; i < data->n[X]; i++)
-        fprintf(OUTPUT, "(%.2lf; %.2lf; %.2lf);  ", y_res[i][X], y_res[i][Y],
-                y_res[i][Z]);
     double result = interpolation(y_res, data->n[X], data->n[X], data->x[X], X);
-    fprintf(OUTPUT, "result: %.2lf", result);
-
-
-    /*for (int i = 0; i < data->n[X]; i++)*/
-        /*free(y_res[i]);*/
-    /*free(y_res);*/
-
-    /*for (int i = 0; i < data->size[Y]; i++)*/
-        /*free(points[i]);*/
-    /*free(points);*/
 
     return result;
 }
