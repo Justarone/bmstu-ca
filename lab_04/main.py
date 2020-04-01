@@ -111,32 +111,43 @@ def draw_result():
 
 
 if __name__ == "__main__":
-    filename = "input.txt" # input("Enter filename: ")
-    points = read_from_file(filename)
+    # filename = "input.txt" # input("Enter filename: ")
+    # points = read_from_file(filename)
 
-    if not points:
-        print("Error occured while reading data from the file!")
-        exit(1)
-
-    print_table(points)
-
+    filenames = input("Enter filenames: ").split()
+    labels = input("Enter labels: ").split(',')
     try:
-        degree = int(input("Enter polynomial degree: "))
+        degree = list(map(int, input("Enter polynomial degree: ").split()))
     except:
-        print("Error occured while reading int!")
+        print("Error occured while reading int(s)!")
         exit(1)
-    if degree > len(points) - 1:
-        print("Polynomial degree is too big. Error!")
-        exit(1)
+    # if degree > len(points) - 1:
+        # print("Polynomial degree is too big. Error!")
+        # exit(1)
 
-    slae_matrix = find_slae_matrix(points, degree)
-    # print("\n\nMATRIX TO SOLVE:\n")
-    # print_matrix(slae_matrix)
-    # print("\nSOLVED MATRIX:\n")
-    coeffs = get_polynomial_coeffs(slae_matrix)
-    # print_matrix(slae_matrix)
+    points = read_from_file(filenames[0])
+    add_table(points, "Table")
 
-    add_table(points, "table")
-    add_plot(coeffs, "polynomial", points[0].x, points[-1].x)
+    for i in range(len(filenames)):
+
+        points = read_from_file(filenames[i])
+        print('\n' + labels[i] + '\n')
+        print_table(points)
+
+        for j in range(len(degree)):
+
+            # if not points:
+                # print("Error occured while reading data from the file!")
+                # exit(1)
+
+            slae_matrix = find_slae_matrix(points, degree[j])
+            # print("\n\nMATRIX TO SOLVE:\n")
+            # print_matrix(slae_matrix)
+            # print("\nSOLVED MATRIX:\n")
+            coeffs = get_polynomial_coeffs(slae_matrix)
+            # print_matrix(slae_matrix)
+
+            add_plot(coeffs, f"n = {degree[j]} ({labels[i]})",
+                     points[0].x, points[-1].x)
 
     draw_result()
