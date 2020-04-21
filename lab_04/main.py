@@ -1,3 +1,4 @@
+
 from numpy import arange
 import matplotlib.pyplot as plt
 
@@ -10,13 +11,6 @@ class Point:
 
     def __str__(self):
         return f"|{self.x:10.2f} | {self.y:10.2f} | {self.weight:10.2f} |"
-
-
-def print_matrix(matrix):
-    for i in range(len(matrix)):
-        for j in range(len(matrix[i])):
-            print(f"{matrix[i][j]:15.2f}", end = '')
-        print("\n")
 
 
 def print_table(table):
@@ -55,7 +49,8 @@ def get_coeff(points, degree):
 
 
 def find_slae_matrix(points, degree):
-    matrix = [[get_coeff(points, j + i) for i in range(degree + 1)] for j in range(degree + 1)]
+    matrix = [[get_coeff(points, j + i) for i in range(degree + 1)]
+              for j in range(degree + 1)]
     append_right_side(matrix, points)
     return matrix
 
@@ -102,8 +97,8 @@ def add_table(table, label):
 def draw_result():
     plt.legend()
 
-    plt.xlabel('Размеры') 
-    plt.ylabel('Время')
+    plt.xlabel('X') 
+    plt.ylabel('Y')
 
     plt.grid()
     plt.show()
@@ -111,19 +106,9 @@ def draw_result():
 
 
 if __name__ == "__main__":
-    # filename = "input.txt" # input("Enter filename: ")
-    # points = read_from_file(filename)
-
     filenames = input("Enter filenames: ").split()
     labels = input("Enter labels: ").split(',')
-    try:
-        degree = list(map(int, input("Enter polynomial degree: ").split()))
-    except:
-        print("Error occured while reading int(s)!")
-        exit(1)
-    # if degree > len(points) - 1:
-        # print("Polynomial degree is too big. Error!")
-        # exit(1)
+    degree = list(map(int, input("Enter polynomial degree: ").split()))
 
     points = read_from_file(filenames[0])
     add_table(points, "Table")
@@ -135,18 +120,8 @@ if __name__ == "__main__":
         print_table(points)
 
         for j in range(len(degree)):
-
-            # if not points:
-                # print("Error occured while reading data from the file!")
-                # exit(1)
-
             slae_matrix = find_slae_matrix(points, degree[j])
-            # print("\n\nMATRIX TO SOLVE:\n")
-            # print_matrix(slae_matrix)
-            # print("\nSOLVED MATRIX:\n")
             coeffs = get_polynomial_coeffs(slae_matrix)
-            # print_matrix(slae_matrix)
-
             add_plot(coeffs, f"n = {degree[j]} ({labels[i]})",
                      points[0].x, points[-1].x)
 
