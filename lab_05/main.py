@@ -1,5 +1,7 @@
 from numpy.polynomial.legendre import leggauss
+from numpy import arange
 from math import pi, cos, sin, exp
+import matplotlib.pyplot as plt
 
 def main_function(param):
     subfunc = lambda x, y: 2 * cos(x) / (1 - (sin(x) ** 2) * (cos(y) ** 2))
@@ -50,16 +52,41 @@ def integrate2(func, limits, num_of_nodes, integrators):
     inner = lambda x: integrators[1](func_2_to_1(func, x), limits[1][0], limits[1][1], num_of_nodes[1])
     return integrators[0](inner, limits[0][0], limits[0][1], num_of_nodes[0])
 
+def tao_graph(integrate_func, ar_params, label):
+    X = list()
+    Y = list()
+    for t in arange(ar_params[0], ar_params[1] + ar_params[2], ar_params[2]):
+        X.append(t)
+        Y.append(integrate_func(t))
+    plt.plot(X, Y, label=label)
 
-N = int(input("Enter N: ")) + 1
-M = int(input("Enter M: ")) + 1
-param = float(input("Enter param: "))
-# mode = bool(int(input("Enter mode:\n0: Gauss-Simpson;\n1: Simpson-Gauss;\nEnter: ")))
+def generate_label(n, m, func1, func2):
+    res = "N = " + str(n) + ", M = " + str(m) + ", Methods = "
+    res += "Simpson" if func1 == simpson else "Gauss"
+    res += "-Simpson" if func2 == simpson else "-Gauss"
+    return res
 
-# func1 = simpson if mode else gauss
-# func2 = gauss if mode else simpson
 
-func1 = gauss
-func2 = gauss
+end = False
+while not end:
+    N = int(input("Enter N: "))
+    M = int(input("Enter M: "))
+    # param = float(input("Enter param (tao): "))
+    mode = bool(int(input("Enter external method (0 - Gauss; 1 - Simpson): ")))
+    func1 = simpson if mode else gauss
+    mode = bool(int(input("Enter internal method (0 - Gauss; 1 - Simpson): ")))
+    func2 = simpson if mode else gauss
 
-print(integrate2(main_function(param), [[0, pi / 2], [0, pi / 2]], [N, M], [func1, func2]))
+    param_integrate = lambda tao: integrate2(main_function(tao), [[0, pi / 2], [0, pi / 2]], [N, M], [func1, func2])
+    try:
+        tao_graph(param_integrate, [0.05, 10, 0.05], generate_label(N, M, func1, func2))
+    except ValueError:
+        print("Be careful with simpson: argument should be > 2 and not even (3, 5...);")
+    except ZeroDivisionError:
+        print("Can't use 2 Simpsons, zero in denominator")
+    end = bool(int(input("End? (0 - No, 1 - Yes): ")))
+
+plt.legend()
+plt.ylabel("Result")
+plt.xlabel("Tao value")
+plt.show()
