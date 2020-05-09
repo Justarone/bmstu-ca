@@ -71,13 +71,14 @@ end = False
 while not end:
     N = int(input("Enter N: "))
     M = int(input("Enter M: "))
-    # param = float(input("Enter param (tao): "))
+    param = float(input("Enter param (tao): "))
     mode = bool(int(input("Enter external method (0 - Gauss; 1 - Simpson): ")))
     func1 = simpson if mode else gauss
     mode = bool(int(input("Enter internal method (0 - Gauss; 1 - Simpson): ")))
     func2 = simpson if mode else gauss
 
     param_integrate = lambda tao: integrate2(main_function(tao), [[0, pi / 2], [0, pi / 2]], [N, M], [func1, func2])
+    print("Result with your parameter:", param_integrate(param))
     try:
         tao_graph(param_integrate, [0.05, 10, 0.05], generate_label(N, M, func1, func2))
     except ValueError:
